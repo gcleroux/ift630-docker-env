@@ -1,0 +1,149 @@
+
+#  Convolution.sr
+#-------------------
+# Ce programme implante un calcul de convolution sur une image en utilisant les processus
+# Le filtre utilisé est un filtre moyenneur.
+# Le programme ne fonctionne que sur des images de type «raw»
+#
+# Paramètres sur la lignre de commandes
+#  - Parm #1 : nombre de processus (pcs) à utiliser
+#  - Parm #2 : taille «horizontale» de l'image 
+#  - Parm #3 : taille «verticale» de l'image 
+#  - Parm #4 : nom du fichier contenant l'image
+#  - Parm #5 : nom du fichier de sortie
+#  - Parm #6 : taille du filtre
+
+resource convolution()
+    var nbPcs : int                     # nombre de processus
+    var nom, nom_sortie: string[64]     # pour les fichiers à manipuler
+    var texte: string[5000000]          # pour contenir l'image en entrée
+    var resul: string[5000000]          # pour contenir l'image résultante
+    var temp, temp2 : int
+    var entree: file 
+    var sortie: file
+    var t1, t2, total:int
+    var filtre : real 
+    var tx, ty : int 
+    var taille_filtre, taille,index : int 
+    
+    # Récupération des paramètres
+    getarg(1, nbPcs)        # nombre de processus
+    getarg(2, tx)           # taille de l'image en «x»
+    getarg(2, ty)           # taille de l'image en «y»
+    getarg(4, nom)          # nom de fichier contenant l'image
+    getarg(5, nom_sortie)   # nom de fichier contenant l'image
+    getarg(6,taille_filtre)
+    #-------------------------
+    # **** Affichage pourmise au points
+    # write("Nombre de pcs = ", nbPcs, " --- " , nom)
+    
+    #-----------------------------
+    # Lecture de l'image
+    entree := open(nom, READ)
+    if entree = null ->
+       write(stderr, "Impossible d'ouvrir ", nom, " en lecture"); stop
+    fi
+    taille := get(entree, texte)
+    #---------
+    # Initialisation de l'image de sortie
+    resul:=texte 
+    #-------------------------
+    # **** Affichage pour mise au points
+    #write(taille, int(texte[1]), int(texte[2]), int(texte[3]))
+    
+    # Calcul de la valeur du filtre moyenneur
+    filtre := 1.0/ (taille_filtre * taille_filtre)
+    #-------
+    # On détermine la dimension de l'image à traiter par chaque pcs
+    # le dernier pcs traite aussi les pixels «restant»
+    temp := taille / nbPcs
+    temp2 := temp + (taille % nbPcs);
+    write(temp, " --", temp2)
+    # -----
+    # Positionnement du chronomètre pour évaluer la performance
+    t1 := age()
+    
+    #----------------------------------------------------------------------
+    # Les processus de calcul
+    # Chaque pcs calcule la convolution pour un certain nombre de points
+    # d'une image
+    #
+    # Entrée : le nombre et les indices des processus
+    #
+    # Les processus sont démarrés automatqiuement lorsque le code arrive à ce niveau
+    process calcul(pcs := 1 to nbPcs)
+        var distance : int
+        var pixel : real
+        var debut,fin : int
+        var ligne, colonne : int 
+        var i1,i2 : int 
+        var indice1, indice2, colFin: int 
+        #-----------------------------------
+        distance := int(taille_filtre/2)    # on calcule la distance à traiter autour du pixel
+        #----------------------------------------------------------------------
+        # Chaque pcs traite une partie de l'image de taille «taille».  
+        # Selon l'index du pcs on détermine quelle partie il doit traiter  
+        # Il y des ajustements car les indices vont de 1 à 512 (et non de 0 à 511)
+        debut := (temp*(pcs-1)) + 1                # ajustement 
+        if pcs < nbPcs -> fin := debut + temp -1
+        [] else -> fin := debut + temp2 -1
+        fi
+        colFin:=fin%tx
+        if colFin=0 -> colFin:=512 fi      # ajustement 
+        #-----------------------------------------------------------------------
+        # **** Affichage pour mise au points
+        #write( int(debut), ":", int(fin))
+        #write("De la ligne :", int(debut/ty+1), ":", int(fin/ty), " --- à la colonne ", (debut%tx),":",(colFin))
+        #-------------------------------------------------------------------------
+        # On parcourt l'image pour traiter chaque pixel
+        fa indice := int(debut) to int(fin) ->
+            # L'image est emmagasinée dans un tableau 1D.
+            # Selon la taille de l'image on se repositionne en 2D (ligne et colonne)
+            ligne := int(indice/ty+1)
+            colonne := (indice%tx) 
+            pixel:=0.0
+            #-------------------------------------------------------------------
+            # Application du filtre sur le pixel
+            fa i1 := 0 to taille_filtre-1 ->
+                fa i2 := 0 to taille_filtre-1 ->
+                    indice1 := ligne - distance + i1     # indice pour la ligne
+                    indice2 := colonne - distance + i2   # indice pour la colonne
+                    if indice1 < 1  -> indice1 := 1 fi   # au cas où l'indice soit à l'extérieur de l'image
+                    if indice2 < 1  -> indice2 := 1 fi   # au cas où l'indice soit à l'extérieur de l'image
+                    if indice1 > tx -> indice1 := tx fi  # au cas où l'indice soit à l'extérieur de l'image
+                    if indice2 > ty -> indice2 := ty fi  # au cas où l'indice soit à l'extérieur de l'image
+                    # write(indice1, "--------", indice2)
+                    # Application du filtre et cumul du résultat
+                    pixel := pixel + int(texte[(indice1-1)*tx + indice2]) * filtre
+                af
+            af
+            #-----------------------------------------------------------------------
+            # **** Affichage pour mise au points
+            #write("Resultats = ", indice1, ":", indice2," pixel =", int(texte[(indice1-1)*tx + indice2]), " --> ",  int(pixel))
+            # **** Affichage pour mise au points
+            #write ((ligne-1)*tx + colonne)
+            # sauvegarde du résultat dans l'image de sortie
+            resul[(ligne-1)*tx + colonne]:= char(pixel) 
+        af
+    end
+
+    # Code à exécuter lorsque tous les processus ont terminé
+    final
+        #===============================================
+        # Arrêt du chronomètre
+        t2 := age()
+      
+        # Sauvegarde du résultat dans fichier de sortie
+        sortie := open(nom_sortie, WRITE)
+        if sortie = null ->
+            write(stderr, "Impossible d'ouvrir ", nom, " en lecture");
+        [] else -> 
+            fa index:=1 to taille ->
+                writes(sortie,resul[index])
+            af
+        fi
+        #----------------
+        # Affichage du temps d'exécution
+        write ("Temps d'exécution = ", (t2-t1)/1000.0, " secondes ")
+     end
+end
