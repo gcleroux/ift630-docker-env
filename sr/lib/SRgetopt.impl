@@ -1,0 +1,4 @@
+#  global SRgetopt
+#  from   /home/ubuntu/sr/library/SRgetopt.sr
+
+p  getopt

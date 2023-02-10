@@ -1,0 +1,33 @@
+#  global SRanimator
+#  from   /home/ubuntu/sr/library/SRanimator.sr
+
+i  A_bg
+i  A_coords
+i  A_delay
+i  A_line
+i  A_rectangle
+i  A_circle
+i  A_triangle
+i  A_text
+i  A_bigtext
+i  A_fonttext
+i  A_delete
+i  A_move
+i  A_moverelative
+i  A_moveto
+i  A_jump
+i* A_stepjump
+i  A_jumprelative
+i  A_jumpto
+i* A_stepjumpto
+i  A_color
+i  A_fill
+i  A_vis
+i  A_raise
+i  A_lower
+i  A_exchangepos
+i  A_switchpos
+i  A_swapid
+i  A_resize
+i  A_zoom
+i  A_end

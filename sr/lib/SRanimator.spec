@@ -1,0 +1,36 @@
+# 0 /home/ubuntu/sr/library/SRanimator.sr 1+
+
+global SRanimator
+ op A_bg ( colorr : string [ * ] )
+ op A_coords ( lx , byy , rx , ty : real )
+ op A_delay ( frames : int )
+ op A_line ( id : int ; lx , ly , sx , sy : real ;
+ colorr , width , style , arrows : string [ * ] )
+ op A_rectangle ( id : int ; lx , ly , sx , sy : real ; colorr , filll : string [ * ] )
+ op A_circle ( id : int ; lx , ly , rad : real ; colorr , filll : string [ * ] )
+ op A_triangle ( id : int ; lx , ly , vx0 , vy0 , vx1 , vy1 : real ;
+ colorr , filll : string [ * ] )
+ op A_text ( id : int ; lx , ly : real ; cen : int ; colorr , str : string [ * ] )
+ op A_bigtext ( id : int ; lx , ly : real ; cen : int ; colorr , str : string [ * ] )
+ op A_fonttext ( id : int ; lx , ly : real ; cen : int ; colorr , fontname , str : string [ * ] )
+ op A_delete ( id : int )
+ op A_move ( id : int ; tx , ty : real )
+ op A_moverelative ( id : int ; tx , ty : real )
+ op A_moveto ( id1 , id2 : int )
+ op A_jump ( id : int ; tx , ty : real )
+ op A_stepjump ( id : int ; tx , ty : real ; nsteps , steptime : int )
+ op A_jumprelative ( id : int ; tx , ty : real )
+ op A_jumpto ( id1 , id2 : int )
+ op A_stepjumpto ( id1 , id2 : int ; nsteps , steptime : int )
+ op A_color ( id : int ; colname : string [ * ] )
+ op A_fill ( id : int ; filll : string [ * ] )
+ op A_vis ( id : int )
+ op A_raise ( id : int )
+ op A_lower ( id : int )
+ op A_exchangepos ( id1 , id2 : int )
+ op A_switchpos ( id1 , id2 : int )
+ op A_swapid ( id1 , id2 : int )
+ op A_resize ( id : int ; rx , ry : real )
+ op A_zoom ( id : int ; rx , ry : real )
+ op A_end ( )
+ body SRanimator ; end ;
