@@ -1,5 +1,10 @@
 FROM ubuntu:20.04
 
+LABEL author="Guillaume Cléroux"
+LABEL email="guillaume.cleroux@usherbrooke.ca"
+LABEL description="Un environnement de développement intégré avec \
+docker pour le cours IFT630"
+
 # Assign timezone for imagemagick
 ENV TZ=America/Toronto
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
