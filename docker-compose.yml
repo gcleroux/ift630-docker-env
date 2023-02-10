@@ -1,0 +1,16 @@
+---
+version: "3"
+services:
+  build-image:
+    container_name: building
+    build: .
+    image: gcleroux/ift630-docker-env
+
+  test:
+    container_name: testing
+    image: gcleroux/ift630-docker-env
+    volumes:
+      - ./tests:/tests
+    command: ["python3", "-m", "pytest", "/tests/tests.py"]
+    depends_on:
+      - build-image

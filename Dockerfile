@@ -23,7 +23,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Forcing sr to /home/ubuntu path
 COPY sr /home/ubuntu/sr
-COPY tests /tests
 
 # Adding sr to $PATH
 ENV PATH /home/ubuntu/sr/bin:$PATH
