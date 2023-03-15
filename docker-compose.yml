@@ -29,3 +29,14 @@ services:
     command: [ "python3", "-m", "pytest", "/tests/tests.py" ]
     depends_on:
       - build
+
+  test-intel:
+    container_name: test-intel
+    image: gcleroux/ift630-docker-env
+    volumes:
+      - ./tests:/tests
+    devices:
+      - "/dev/dri:/dev/dri"
+    command: [ "python3", "-m", "pytest", "/tests/intel_opencl.py" ]
+    depends_on:
+      - build
