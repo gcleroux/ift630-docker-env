@@ -1,4 +1,11 @@
+"""
+Testing OpenCL support for intel GPU
+
+Author: Guillaume Cleroux
+"""
 import subprocess as sp
+
+from . import TESTS_PATH
 
 
 def test_intel_clinfo():
@@ -13,4 +20,4 @@ def test_intel_clinfo():
 
 def test_intel_opencl():
     """Testing OpenCL support"""
-    sp.run(["python3", "/tests/opencl.py"], check=True)
+    sp.run(["python3", f"{TESTS_PATH}/opencl/opencl.py"], check=True)

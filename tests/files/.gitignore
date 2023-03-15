@@ -5,3 +5,4 @@
 !./pythonMT/convolution.py
 !./pythonMP/convolution.py
 !./sr/convolution.sr
+!./opencl/opencl.py

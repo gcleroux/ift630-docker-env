@@ -5,8 +5,7 @@ Author: Guillaume Cleroux
 """
 import subprocess as sp
 
-TESTS_PATH = "/tests/files/"
-IMAGE_PATH = "/tests/files/image/lena512.raw"
+from . import IMAGE_PATH, TESTS_PATH
 
 
 def test_cpp():
