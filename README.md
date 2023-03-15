@@ -4,9 +4,8 @@ Environnement de développement pour les TPs en IFT630.
 
 ## To-do
 
-- [ ] Support pour GPU nvidia avec OpenCL
-- [ ] Tests intégrés pour OpenCL
-- [ ] README sur dockerHub
+- [x] Support pour GPU intel avec OpenCL (python only)
+- [ ] Tests intégrés pour OpenCL intel
 
 ## Utilisation
 
