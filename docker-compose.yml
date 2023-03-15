@@ -1,16 +1,31 @@
 ---
 version: "3"
 services:
-  build-image:
-    container_name: building
+  build:
+    container_name: build
     build: .
     image: gcleroux/ift630-docker-env
+
+  default:
+    # No gpu attached in default session
+    container_name: default
+    image: gcleroux/ift630-docker-env
+    depends_on:
+      - build
+
+  intel:
+    container_name: intel
+    image: gcleroux/ift630-docker-env
+    devices:
+      - "/dev/dri:/dev/dri"
+    depends_on:
+      - build
 
   test:
     container_name: testing
     image: gcleroux/ift630-docker-env
     volumes:
       - ./tests:/tests
-    command: ["python3", "-m", "pytest", "/tests/tests.py"]
+    command: [ "python3", "-m", "pytest", "/tests/tests.py" ]
     depends_on:
-      - build-image
+      - build
