@@ -11,13 +11,15 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Installing gcc and sr libs
 RUN apt-get update && apt-get install -y \
-    build-essential=12.8ubuntu1 \
-    gcc-multilib=4:9.3.0-1ubuntu2 \
-    htop=2.2.0-2build1 \
-    python3=3.8.2-0ubuntu2 \
-    python3-pip=20.0.2-5ubuntu1.7 \
-    imagemagick=8:6.9.10.23+dfsg-2.1ubuntu11.4 \
-    libmagickwand-dev=8:6.9.10.23+dfsg-2.1ubuntu11.4 --no-install-recommends \
+    build-essential \
+    gcc-multilib \
+    htop \
+    python3 \
+    python3-pip\
+    imagemagick \
+    libmagickwand-dev --no-install-recommends \
+    clinfo \
+    intel-opencl-icd \
     && apt-get clean autoclean \
     && apt-get autoremove -y
 
