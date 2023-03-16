@@ -138,3 +138,8 @@ def test_sr():
         ],
         check=True,
     )
+
+
+def test_clinfo():
+    """Testing clinfo util"""
+    sp.run(["clinfo"], check=True)
