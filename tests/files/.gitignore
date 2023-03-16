@@ -1,0 +1,8 @@
+**/**
+!.gitignore
+!./image/
+!./cpp/convolution.cpp
+!./pythonMT/convolution.py
+!./pythonMP/convolution.py
+!./sr/convolution.sr
+!./opencl/opencl.py
