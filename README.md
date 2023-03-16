@@ -4,9 +4,8 @@ Environnement de développement pour les TPs en IFT630.
 
 ## To-do
 
-- [x] Support pour GPU intel avec OpenCL (python only)
-- [x] Tests intégrés pour OpenCL intel
-- [ ] Section intel GPU dans le README
+- [ ] Support pour GPU Nvidia avec OpenCL
+- [ ] Tests intégrés pour OpenCL nvidia
 
 ## Utilisation
 
@@ -24,6 +23,24 @@ Par la suite, vous pouvez exécuter le conteneur avec la commande suivante:
 
 ```bash
 docker run -it -v <path-vers-fichiers-TP>:/TP gcleroux/ift630-docker-env
+```
+
+### Utilisation GPU avec OpenCL
+
+**Ce conteneur supporte uniquement les GPU intel pour l'instant**
+
+Les fonctionnalités OpenCL et GPU ne sont pas testées automatiquement lors du
+déploiement de l'image, puisque GitHub n'offre pas encore de runner avec GPU
+(autre que les self-hosted runner). Il est fortement recommandé de tester votre
+architecture localement afin de vous assurer votre GPU est supportée. Plus
+d'information est disponible dans la section [Build from source](#build-from-source).
+
+#### GPU intel
+
+Pour relier votre GPU intel au conteneur, utilisez cette commande:
+
+```bash
+docker run --device /dev/dri:/dev/dri -it -v <path-vers-fichiers-TP>:/TP gcleroux/ift630-docker-env
 ```
 
 ### Build from source
@@ -52,3 +69,21 @@ instructions suivantes:
    ```bash
    docker run -it -v <path-vers-fichiers-TP>:/TP ift630-docker-env
    ```
+
+   Pour l'utilisation d'une GPU avec le conteneur, vous pouvez vous référer
+   à la section [Utilisation GPU avec OpenCL](#utilisation-gpu-avec-opencl)
+
+#### Test support GPU intel
+
+Afin de voir si votre GPU intel est supportée par le conteneur, utilisez les
+commande suivante:
+
+```bash
+# Build
+docker compose build
+```
+
+```bash
+# Run tests
+docker compose run test-intel
+```
