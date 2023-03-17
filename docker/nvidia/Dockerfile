@@ -17,10 +17,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     htop \
     imagemagick \
-    libmagickwand-dev \
     libgl-dev \
+    libmagickwand-dev \
+    libopenmpi-dev \
+    mpich \
     ocl-icd-libopencl1 \
     python3 \
+    python3-dev \
     python3-pip\
     && apt-get clean autoclean \
     && apt-get autoremove -y
