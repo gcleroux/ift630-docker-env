@@ -6,3 +6,7 @@
 !./pythonMP/convolution.py
 !./sr/convolution.sr
 !./opencl/opencl.py
+!./opencl/kernel.cl
+!./opencl/program.h
+!./opencl/contexte.h
+!./opencl/convolution.cpp

@@ -60,7 +60,14 @@ services:
   test-opencl-nvidia:
     container_name: test-opencl-nvidia
     image: gcleroux/ift630-docker-env:nvidia
-    command: [ "python3", "-m", "pytest", "/tests/test_opencl.py" ]
+    command:
+      [
+        "python3",
+        "-m",
+        "pytest",
+        "/tests/test_opencl.py",
+        "/tests/test_nvidia_opencl.py"
+      ]
     volumes:
       - ./tests:/tests
     deploy:
