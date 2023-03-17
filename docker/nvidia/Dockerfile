@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.0.1-runtime-ubuntu20.04
+FROM nvidia/cuda:12.0.1-cudnn8-devel-ubuntu20.04
 
 LABEL author="Guillaume Cléroux"
 LABEL email="guillaume.cleroux@usherbrooke.ca"
@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     htop \
     imagemagick \
     libmagickwand-dev \
+    libgl-dev \
     ocl-icd-libopencl1 \
     python3 \
     python3-pip\
