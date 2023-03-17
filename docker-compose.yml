@@ -1,35 +1,72 @@
 ---
 version: "3"
 services:
-  _build:
-    image: gcleroux/ift630-docker-env
+  _build-intel:
+    image: gcleroux/ift630-docker-env:intel
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./docker
+      dockerfile: intel/Dockerfile
 
-  default:
-    # No gpu attached in default session
-    container_name: default
-    image: gcleroux/ift630-docker-env
+  _build-nvidia:
+    image: gcleroux/ift630-docker-env:nvidia
+    build:
+      context: ./docker
+      dockerfile: nvidia/Dockerfile
 
   intel:
     container_name: intel
-    image: gcleroux/ift630-docker-env
+    image: gcleroux/ift630-docker-env:intel
+    # volumes:
+    # - <path-vers-fichiers-TP>:/TP  # optional
     devices:
       - "/dev/dri:/dev/dri"
 
-  test:
-    container_name: testing
-    image: gcleroux/ift630-docker-env
+  nvidia:
+    container_name: nvidia
+    image: gcleroux/ift630-docker-env:nvidia
+    # volumes:
+    # - <path-vers-fichiers-TP>:/TP  # optional
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
+  test-intel:
+    container_name: test-intel
+    image: gcleroux/ift630-docker-env:intel
     volumes:
       - ./tests:/tests
     command: [ "python3", "-m", "pytest", "/tests/tests.py" ]
 
-  test-intel:
-    container_name: test-intel
-    image: gcleroux/ift630-docker-env
+  test-nvidia:
+    container_name: test-nvidia
+    image: gcleroux/ift630-docker-env:nvidia
+    volumes:
+      - ./tests:/tests
+    command: [ "python3", "-m", "pytest", "/tests/tests.py" ]
+
+  test-opencl-intel:
+    container_name: test-opencl-intel
+    image: gcleroux/ift630-docker-env:intel
     volumes:
       - ./tests:/tests
     devices:
       - "/dev/dri:/dev/dri"
-    command: [ "python3", "-m", "pytest", "/tests/intel_opencl.py" ]
+    command: [ "python3", "-m", "pytest", "/tests/test_opencl.py" ]
+
+  test-opencl-nvidia:
+    container_name: test-opencl-nvidia
+    image: gcleroux/ift630-docker-env:nvidia
+    command: [ "python3", "-m", "pytest", "/tests/test_opencl.py" ]
+    volumes:
+      - ./tests:/tests
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
