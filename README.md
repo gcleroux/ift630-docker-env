@@ -1,49 +1,64 @@
-# ift630-docker-env
-
-Environnement de développement pour les TPs en IFT630.
-
-## To-do
-
-- [ ] Support pour GPU Nvidia avec OpenCL
-- [ ] Tests intégrés pour OpenCL nvidia
+# Environnement de développement IFT630
 
 ## Utilisation
 
 ### Image docker Hub
 
-Une image est fournie sur [dockerHub](https://hub.docker.com/repository/docker/gcleroux/ift630-docker-env/general).
+Deux images sont fournies sur [dockerHub](https://hub.docker.com/repository/docker/gcleroux/ift630-docker-env/general).
+
+- gcleroux/ift630-docker-env:intel
+- gcleroux/ift630-docker-env:nvidia
+
+Il est possible de relier votre GPU au conteneur pour faire de la programmation
+avec OpenCL. Pour l'instant, uniquement les GPU Intel et Nvidia sont supportées.
+Les GPU AMD ne sont pas testées puisque je n'en ai pas à ma disposition.
+
+Si vous ne savez pas quelle image prendre ou que vous ne souhaitez pas relier
+de GPU au conteneur, je recommande l'image `intel` par défaut.
 
 Pour récupérer l'image, utilisez la commande suivante:
 
 ```bash
-docker pull gcleroux/ift630-docker-env
+docker pull gcleroux/ift630-docker-env:intel
 ```
 
 Par la suite, vous pouvez exécuter le conteneur avec la commande suivante:
 
 ```bash
-docker run -it -v <path-vers-fichiers-TP>:/TP gcleroux/ift630-docker-env
+docker run -it -v <path-vers-fichiers-TP>:/TP gcleroux/ift630-docker-env:intel
 ```
 
 ### Utilisation GPU avec OpenCL
 
-**Ce conteneur supporte uniquement les GPU intel pour l'instant**
+**L'environnement de développement supporte uniquement les GPU intel/nvidia**
 
 Les fonctionnalités OpenCL et GPU ne sont pas testées automatiquement lors du
-déploiement de l'image, puisque GitHub n'offre pas encore de runner avec GPU
-(autre que les self-hosted runner). Il est fortement recommandé de tester votre
-architecture localement afin de vous assurer votre GPU est supportée. Plus
-d'information est disponible dans la section [Build from source](#build-from-source).
+déploiement de l'image, puisque GitHub [n'offre pas encore de runner avec GPU](https://github.com/github/roadmap/issues/505).
+Il est fortement recommandé de tester votre architecture localement afin de vous
+assurer votre GPU est supportée. Plus d'information est disponible dans la section
+[Test OpenCL](#test-opencl-avec-support-gpu).
 
-#### GPU intel
+#### GPU Intel
 
-Pour relier votre GPU intel au conteneur, utilisez cette commande:
+Pour relier votre GPU Intel au conteneur, utilisez cette commande:
 
 ```bash
-docker run --device /dev/dri:/dev/dri -it -v <path-vers-fichiers-TP>:/TP gcleroux/ift630-docker-env
+docker run --device /dev/dri:/dev/dri -it -v <path-vers-fichiers-TP>:/TP gcleroux/ift630-docker-env:intel
 ```
 
-### Build from source
+#### GPU Nvidia
+
+Afin de relier votre GPU au conteneur, il faut d'abord que vous ayez installé le
+`nvidia-container-runtime` sur votre distribution. Les instructions pour l'installation
+se trouvent [ici](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html).
+
+Pour relier votre GPU Nvidia au conteneur, utilisez cette commande:
+
+```bash
+docker run --runtime=nvidia --gpus all -it -v <path-vers-fichiers-TP>:/TP gcleroux/ift630-docker-env:nvidia
+```
+
+## Build from source
 
 Si vous souhaitez bâtir l'image à partir de la source, vous pouvez suivre les
 instructions suivantes:
@@ -61,21 +76,25 @@ instructions suivantes:
 2. Construire l'image
 
    ```bash
-   docker build -t ift630-docker-env .
+   docker compose build
    ```
 
 3. Exécutez le conteneur
 
    ```bash
-   docker run -it -v <path-vers-fichiers-TP>:/TP ift630-docker-env
+   docker compose run intel
    ```
 
-   Pour l'utilisation d'une GPU avec le conteneur, vous pouvez vous référer
-   à la section [Utilisation GPU avec OpenCL](#utilisation-gpu-avec-opencl)
+   ```bash
+   docker compose run nvidia
+   ```
 
-#### Test support GPU intel
+   Pour relier vos fichiers locaux dans le conteneur, vous pouvez ajouter leur emplacement
+   dans la fichier `docker-compose.yml` dans l'étiquette `volumes` prévue à cet effet.
 
-Afin de voir si votre GPU intel est supportée par le conteneur, utilisez les
+### Test OpenCL avec support GPU
+
+Afin de voir si votre GPU est supportée par le conteneur, utilisez les
 commande suivante:
 
 ```bash
@@ -83,7 +102,14 @@ commande suivante:
 docker compose build
 ```
 
+#### Intel
+
 ```bash
-# Run tests
-docker compose run test-intel
+docker compose run test-opencl-intel
+```
+
+#### Nvidia
+
+```bash
+docker compose run test-opencl-nvidia
 ```
