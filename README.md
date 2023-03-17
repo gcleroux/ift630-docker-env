@@ -38,6 +38,8 @@ Il est fortement recommandé de tester votre architecture localement afin de vou
 assurer votre GPU est supportée. Plus d'information est disponible dans la section
 [Test OpenCL](#test-opencl-avec-support-gpu).
 
+_Note: Pour le TP1, il est necéssaire d'avoir une GPU Nvidia afin de compiler le code fourni._
+
 #### GPU Intel
 
 Pour relier votre GPU Intel au conteneur, utilisez cette commande:
