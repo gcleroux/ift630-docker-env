@@ -38,6 +38,10 @@ COPY sr /home/ubuntu/sr
 # Adding sr to $PATH
 ENV PATH /home/ubuntu/sr/bin:$PATH
 
+# Allow MPI to run as root
+ENV OMPI_ALLOW_RUN_AS_ROOT 1
+ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM 1
+
 WORKDIR /TP
 
 CMD [ "bash" ]
