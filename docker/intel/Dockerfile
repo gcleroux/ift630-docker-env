@@ -27,10 +27,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean autoclean \
     && apt-get autoremove -y
 
-COPY requirements.txt /requirements.txt
+COPY requirements-intel.txt /requirements-intel.txt
 
 # Installing numpy for pyhton's convolution
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements-intel.txt
 
 # Forcing sr to /home/ubuntu path
 COPY sr /home/ubuntu/sr
